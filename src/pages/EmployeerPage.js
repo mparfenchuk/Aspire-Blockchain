@@ -57,7 +57,7 @@ class EmployeerPage extends Component {
                                             </tr>
                                             <tr>
                                                 <th scope="row">Address</th>
-                                                <td>0x3465...</td>
+                                                <td>0x0911...</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Balance</th>
@@ -89,19 +89,19 @@ class EmployeerPage extends Component {
                                                     <th scope="row">1</th>
                                                     <td>0x2346...</td>
                                                     <td>3</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x9456...")} color="link">View</Button></td>
+                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x2346...")} color="link">View</Button></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">2</th>
                                                     <td>0x8764...</td>
                                                     <td>4</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x4354...")} color="link">View</Button></td>
+                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x8764...")} color="link">View</Button></td>
                                                 </tr>
                                                 <tr>
                                                     <th scope="row">3</th>
                                                     <td>0x8913...</td>
                                                     <td>2</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x2433...")} color="link">View</Button></td>
+                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x8913...")} color="link">View</Button></td>
                                                 </tr>
                                             </tbody>
                                         </Table>
