@@ -55,14 +55,6 @@ class EmployeerPage extends Component {
                                                 <th scope="row">Company</th>
                                                 <td>Google Inc</td>
                                             </tr>
-                                            <tr>
-                                                <th scope="row">Address</th>
-                                                <td>0x0911...</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">Balance</th>
-                                                <td>0 ETH</td>
-                                            </tr>
                                         </tbody>
                                     </Table>
                                 </CardBody>

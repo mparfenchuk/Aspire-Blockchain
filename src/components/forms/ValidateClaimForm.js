@@ -19,14 +19,14 @@ class ValidateClaimForm extends Component {
   }
 
   renderField = ({ input, label, className, type, meta: { touched, error } }) => (
-      <FormGroup className="mb-4">
+      <FormGroup>
           <Input {...input} placeholder={label} className={className} invalid={(touched && error) ? true : false } type={type} autoComplete="off" required/>
           {touched && error && <div className="text-danger"><small>{error}</small></div>}
       </FormGroup>
   )
 
   renderSelect = ({ input, label, className, type, meta: { touched, error } }) => (
-    <FormGroup className="mb-4">
+    <FormGroup>
         <Input {...input}  className={className} invalid={(touched && error) ? true : false } type={type} autoComplete="off" required>
             <option value="" disabled>{label}</option>
             <option value="true">True</option>
