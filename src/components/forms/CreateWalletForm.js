@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
-import { Button, Form, FormGroup, Alert, Input, Row, Col } from 'reactstrap';
+import { Button, Form, FormGroup, Alert, Input } from 'reactstrap';
 import lightwallet from 'eth-lightwallet'
 
 import { createWallet, changeToRestore } from '../../actions'
@@ -60,12 +60,10 @@ class CreateWalletForm extends Component {
                       component={this.renderField} label="Confirm password" className="py-2 px-4"
                       validate={[ this.required, this.passwordsMatch ]}
                   />
-                  <Row className="align-items-center">
-                      <Col>
-                          <Button type="submit" disabled={pristine || submitting || invalid} className="my-2" color="primary">Create</Button>{' '}
-                          <Button type="button" disabled={submitting} onClick={this.toRestore} className="my-2" color="link">Restore</Button>
-                      </Col>
-                  </Row>
+                  <FormGroup>
+                    <Button type="submit" disabled={pristine || submitting || invalid} className="my-2" color="primary">Create</Button>{' '}
+                    <Button type="button" disabled={submitting} onClick={this.toRestore} className="my-2" color="link">Restore</Button>
+                  </FormGroup>
               </Form>
           </div>
       );

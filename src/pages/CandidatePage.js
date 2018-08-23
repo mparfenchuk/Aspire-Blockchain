@@ -78,6 +78,22 @@ class CandidatePage extends Component {
                                                 <td>0x6556...</td>
                                                 <td>21/09/2018 22:00</td>
                                             </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Dancer</td>
+                                                <td>NOT VALIDATED</td>
+                                                <td>0x3443...</td>
+                                                <td>0x0932...</td>
+                                                <td>22/09/2018 21:00</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>Singer</td>
+                                                <td>PENDING</td>
+                                                <td>0x3443...</td>
+                                                <td>0x4933...</td>
+                                                <td>23/09/2018 09:00</td>
+                                            </tr>
                                         </tbody>
                                     </Table>
                                 </CardBody>

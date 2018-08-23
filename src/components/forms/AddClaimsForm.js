@@ -16,7 +16,6 @@ class AddClaimsForm extends Component {
   submit = (values) => {
 
       console.log(values)
-      //createWallet(randomSeed, values.password, "addClaimsForm");
   }
 
   renderField = ({ input, label, className, type, fields, index, meta: { touched, error } }) => (
@@ -71,7 +70,7 @@ class AddClaimsForm extends Component {
 AddClaimsForm = connect(
     null,
     {
-        //createWallet
+        
     }
 )(AddClaimsForm);
 
