@@ -4,25 +4,23 @@ import { Container,
     Row,
     Col,
     Card,
-    CardHeader, 
-    CardTitle,
+    CardHeader,
     CardBody,
     Table,
-    Button
+    Button,
+    Alert
 } from 'reactstrap';
 
-import ValidateClaimForm from '../components/forms/ValidateClaimForm';
+import ValidateClaims from '../components/ValidateClaims';
 
-import { showCandidatesToValidator, showCandidateToValidator } from '../actions'
+import { showCandidateToValidator, setValidatorData } from '../actions'
+
 class ValidatorPage extends Component {
 
     constructor(props) {
         super(props) 
 
         this.toCandidate = this.toCandidate.bind(this);
-        this.toAll = this.toAll.bind(this);
-
-        this.claims = ["Teacher", "Singer"]
     }
 
     toCandidate = (address) => {
@@ -31,14 +29,28 @@ class ValidatorPage extends Component {
         showCandidateToValidator(address);
     }
 
-    toAll = () => {
-        let { showCandidatesToValidator } = this.props;
-        showCandidatesToValidator();
+    componentDidMount(){
+
+        let { setValidatorData } = this.props;
+
+        setValidatorData(0);
+
+        let counter = 0;
+        this.intervalId = setInterval(function() {
+            counter++;
+            setValidatorData(counter);
+        }, 5000);
+    }
+
+    componentWillUnmount(){
+
+        clearInterval(this.intervalId);
     }
     
     render() {
 
-        let { page, candidate } = this.props
+        let { page, candidate, validatorAddress, validatorEthBalance, validatorTokenBalance,
+            candidates, validatorError } = this.props
 
         return (
             <section className="mb-5">
@@ -48,15 +60,20 @@ class ValidatorPage extends Component {
                             <Card className="my-4">
                                 <CardHeader>Validator</CardHeader>
                                 <CardBody>
+                                    {validatorError && <Alert color="danger">{validatorError}</Alert>}
                                     <Table responsive>
                                         <tbody>
                                             <tr>
                                                 <th scope="row">Address</th>
-                                                <td>0x3465...</td>
+                                                <td>{validatorAddress}</td>
                                             </tr>
                                             <tr>
                                                 <th scope="row">Balance</th>
-                                                <td>0 ETH</td>
+                                                <td>{validatorEthBalance}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Tokens</th>
+                                                <td>{validatorTokenBalance}</td>
                                             </tr>
                                         </tbody>
                                     </Table>
@@ -80,53 +97,21 @@ class ValidatorPage extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>0x9456...</td>
-                                                    <td>2</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x9456...")} color="link">View</Button></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>0x4354...</td>
-                                                    <td>1</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x4354...")} color="link">View</Button></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>0x2433...</td>
-                                                    <td>3</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x2433...")} color="link">View</Button></td>
-                                                </tr>
+                                                {candidates.map((candidate, index) =>
+                                                    <tr key={index}>
+                                                        <th scope="row">{index +1}</th>
+                                                        <td><a href={"https://ropsten.etherscan.io/address/"+candidate.address} target="_blank">{candidate.address.length > 7 ? candidate.address.slice(0, 7 - 1) + "…" : candidate.address}</a></td>
+                                                        <td>{candidate.pending}</td>
+                                                        <td><Button type="button" onClick={this.toCandidate.bind(this, candidate.address)} color="link">View</Button></td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </Table>
                                     </CardBody>
                                 </Card>
                             :
                                 page === "candidate" ? 
-                                    <Card className="my-4">
-                                        <CardHeader>Pending claims</CardHeader>
-                                        <CardBody>
-                                            <CardTitle>{candidate}</CardTitle>
-                                            <Table responsive>
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Certifier</th>
-                                                        <th>Status</th>
-                                                        <th>Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>     
-                                                    {this.claims.map((claim, index) => 
-                                                        <ValidateClaimForm form={`validateClaimForm-${index}`} key={index} claim={claim} index={index} />
-                                                    )}       
-                                                </tbody>
-                                            </Table>
-                                            <Button type="button" onClick={this.toAll} className="my-2" color="danger">Cancel</Button>
-                                        </CardBody>
-                                    </Card>
+                                    <ValidateClaims candidate={candidate} />
                                 :
                                     null
                             }
@@ -140,9 +125,14 @@ class ValidatorPage extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        page: state.validatorPageType.page,
-        candidate: state.validatorPageType.candidate
+        page: state.validatorPage.page,
+        candidate: state.validatorPage.candidate,
+        candidates: state.validatorPage.candidates,
+        validatorAddress: state.validatorPage.validatorAddress,
+        validatorEthBalance: state.validatorPage.validatorEthBalance,
+        validatorTokenBalance: state.validatorPage.validatorTokenBalance,
+        validatorError: state.validatorPage.validatorError
     }
 }
 
-export default connect(mapStateToProps, { showCandidatesToValidator, showCandidateToValidator })(ValidatorPage);
+export default connect(mapStateToProps, { showCandidateToValidator, setValidatorData })(ValidatorPage);

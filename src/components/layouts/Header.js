@@ -11,7 +11,13 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink } from 'reactstrap';
+  NavLink,
+  UncontrolledDropdown,
+  DropdownItem,
+  DropdownToggle,
+  DropdownMenu } from 'reactstrap';
+
+import { logout } from '../../actions'
 
 class Header extends Component {
   constructor(props) {
@@ -21,12 +27,20 @@ class Header extends Component {
     this.state = {
       isOpen: false
     };
+    this.logoutUser = this.logoutUser.bind(this);
   }
 
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
+  }
+
+  logoutUser() {
+    
+    let { logout } = this.props;
+
+    logout();
   }
 
   render() {
@@ -54,6 +68,15 @@ class Header extends Component {
             <NavItem className="mx-4">
               <NavLink tag={Link} to="/employeer" active={(pathname === '/employeer') ? true : false}><b>Employeer</b></NavLink>
             </NavItem>
+            <UncontrolledDropdown className="mx-4" nav inNavbar>
+              <DropdownToggle nav caret>
+              </DropdownToggle>
+              <DropdownMenu right>
+                <DropdownItem href="#logout" onClick={this.logoutUser}>
+                  Logout
+                </DropdownItem>
+              </DropdownMenu>
+            </UncontrolledDropdown>
           </Nav>
         </Collapse>
       </Container>);
@@ -73,4 +96,4 @@ const mapStateToProps = (state) => {
   }
 }
 
-export default connect(mapStateToProps, null)(Header);
+export default connect(mapStateToProps, { logout })(Header);

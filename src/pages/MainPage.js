@@ -50,7 +50,7 @@ class MainPage extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        page: state.mainPageType.page
+        page: state.mainPage.page
     }
 }
 

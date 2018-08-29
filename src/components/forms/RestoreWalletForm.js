@@ -28,7 +28,7 @@ class RestoreWalletForm extends Component {
 
       let { createWallet } = this.props;
       
-      createWallet(values.seed, values.password, "restoreWalletForm");
+      createWallet("restore",values.seed, values.password, "restoreWalletForm");
   }
 
   renderField = ({ input, label, className, type, meta: { touched, error } }) => (

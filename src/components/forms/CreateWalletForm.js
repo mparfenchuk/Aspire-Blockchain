@@ -28,7 +28,7 @@ class CreateWalletForm extends Component {
       let { createWallet } = this.props;
       let randomSeed = lightwallet.keystore.generateRandomSeed();
 
-      createWallet(randomSeed, values.password, "createWalletForm");
+      createWallet("create", randomSeed, values.password, "createWalletForm");
   }
 
   renderField = ({ input, label, className, type, meta: { touched, error } }) => (

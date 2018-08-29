@@ -4,21 +4,22 @@ import { Container,
     Row,
     Col,
     Card,
-    CardHeader, 
-    CardTitle,
+    CardHeader,
     CardBody,
     Table,
-    Button
+    Button,
+    Alert
 } from 'reactstrap';
 
-import { showCandidatesToEmployeer, showCandidateToEmployeer } from '../actions'
+import VerifyClaims from '../components/VerifyClaims';
+
+import { showCandidateToEmployeer, setEmployeerData } from '../actions'
 class EmployeerPage extends Component {
 
     constructor(props) {
         super(props) 
 
         this.toCandidate = this.toCandidate.bind(this);
-        this.toAll = this.toAll.bind(this);
 
         this.claims = [
             {"title":"Teacher","validator":"INVISIBLE","certifier":"INVISIBLE","status":"INVISIBLE","date":"INVISIBLE"}, 
@@ -32,14 +33,27 @@ class EmployeerPage extends Component {
         showCandidateToEmployeer(address);
     }
 
-    toAll = () => {
-        let { showCandidatesToEmployeer } = this.props;
-        showCandidatesToEmployeer();
+    componentDidMount(){
+
+        let { setEmployeerData } = this.props;
+
+        setEmployeerData(0);
+
+        let counter = 0;
+        this.intervalId = setInterval(function() {
+            counter++;
+            setEmployeerData(counter);
+        }, 5000);
+    }
+
+    componentWillUnmount(){
+
+        clearInterval(this.intervalId);
     }
 
     render() {
 
-        let { page, candidate } = this.props
+        let { page, candidate, candidates, employeerError } = this.props
 
         return (
             <section className="mb-5">
@@ -49,6 +63,7 @@ class EmployeerPage extends Component {
                             <Card className="my-4">
                                 <CardHeader>Employeer</CardHeader>
                                 <CardBody>
+                                    {employeerError && <Alert color="danger">{employeerError}</Alert>}
                                     <Table responsive>
                                         <tbody>
                                             <tr>
@@ -77,62 +92,21 @@ class EmployeerPage extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <th scope="row">1</th>
-                                                    <td>0x2346...</td>
-                                                    <td>3</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x2346...")} color="link">View</Button></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">2</th>
-                                                    <td>0x8764...</td>
-                                                    <td>4</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x8764...")} color="link">View</Button></td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row">3</th>
-                                                    <td>0x8913...</td>
-                                                    <td>2</td>
-                                                    <td><Button type="button" onClick={this.toCandidate.bind(this, "0x8913...")} color="link">View</Button></td>
-                                                </tr>
+                                                {candidates.map((candidate, index) =>
+                                                    <tr key={index}>
+                                                        <th scope="row">{index +1}</th>
+                                                        <td><a href={"https://ropsten.etherscan.io/address/"+candidate.address} target="_blank">{candidate.address.length > 7 ? candidate.address.slice(0, 7 - 1) + "…" : candidate.address}</a></td>
+                                                        <td>{candidate.validated}</td>
+                                                        <td><Button type="button" onClick={this.toCandidate.bind(this, candidate.address)} color="link">View</Button></td>
+                                                    </tr>
+                                                )}
                                             </tbody>
                                         </Table>
                                     </CardBody>
                                 </Card>
                             :
                                 page === "candidate" ? 
-                                    <Card className="my-4">
-                                        <CardHeader>Validated claims</CardHeader>
-                                        <CardBody>
-                                            <CardTitle>{candidate}</CardTitle>
-                                            <Table responsive>
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Title</th>
-                                                        <th>Validator</th>
-                                                        <th>Certifier</th>
-                                                        <th>Status</th>
-                                                        <th>Date</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>     
-                                                    {this.claims.map((claim, index) => 
-                                                        <tr key={index}>
-                                                            <th scope="row">{index + 1}</th>
-                                                            <td>{claim.title}</td>
-                                                            <td>{claim.validator}</td>
-                                                            <td>{claim.certifier}</td>
-                                                            <td>{claim.status}</td>
-                                                            <td>{claim.date}</td>
-                                                        </tr>
-                                                    )} 
-                                                </tbody>
-                                            </Table>
-                                            <Button type="button" onClick={this.toAll} className="my-2" color="danger">Cancel</Button>{' '}
-                                            <Button type="button" className="my-2" color="primary">Buy</Button>
-                                        </CardBody>
-                                    </Card>
+                                    <VerifyClaims candidate={candidate} />
                                 :
                                     null
                             }
@@ -146,9 +120,11 @@ class EmployeerPage extends Component {
 
 const mapStateToProps = (state) => {
     return {
-        page: state.employeerPageType.page,
-        candidate: state.employeerPageType.candidate
+        page: state.employeerPage.page,
+        candidate: state.employeerPage.candidate,
+        candidates: state.employeerPage.candidates,
+        employeerError: state.employeerPage.validatorError
     }
 }
 
-export default connect(mapStateToProps, { showCandidatesToEmployeer, showCandidateToEmployeer })(EmployeerPage);
+export default connect(mapStateToProps, { setEmployeerData, showCandidateToEmployeer })(EmployeerPage);

@@ -3,6 +3,7 @@ import { Field, FieldArray, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { Button, Form, FormGroup, Alert, Input, InputGroup, InputGroupAddon } from 'reactstrap';
 
+import { addClaims } from '../../actions'
 class AddClaimsForm extends Component {
 
     constructor(props) {
@@ -15,7 +16,8 @@ class AddClaimsForm extends Component {
 
   submit = (values) => {
 
-      console.log(values)
+    let { addClaims } = this.props;
+    addClaims(values.claims, "addClaimsForm");
   }
 
   renderField = ({ input, label, className, type, fields, index, meta: { touched, error } }) => (
@@ -70,7 +72,7 @@ class AddClaimsForm extends Component {
 AddClaimsForm = connect(
     null,
     {
-        
+        addClaims
     }
 )(AddClaimsForm);
 

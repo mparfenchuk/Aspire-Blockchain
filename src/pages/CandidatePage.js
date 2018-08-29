@@ -6,16 +6,39 @@ import { Container,
     Card,
     CardHeader, 
     CardBody,
-    Table
+    Table,
+    Alert
 } from 'reactstrap';
+import moment from 'moment';
 
 import AddClaimsForm from '../components/forms/AddClaimsForm';
 
+import { setCandidateData } from '../actions'
+
 class CandidatePage extends Component {
+
+    componentDidMount(){
+
+        let { setCandidateData } = this.props;
+
+        setCandidateData(0);
+
+        let counter = 0;
+        this.intervalId = setInterval(function() {
+            counter++;
+            setCandidateData(counter);
+        }, 5000);
+    }
+
+    componentWillUnmount(){
+
+        clearInterval(this.intervalId);
+    }
 
     render() {
 
-        let { address, seed } = this.props
+        let { address, seed, candidateEthBalance, candidateTokenBalance, claims, addClaimsHash,
+            candidateError } = this.props
 
         return (
             <section className="mb-5">
@@ -25,6 +48,7 @@ class CandidatePage extends Component {
                             <Card className="my-4">
                                 <CardHeader>Profile</CardHeader>
                                 <CardBody>
+                                    {candidateError && <Alert color="danger">{candidateError}</Alert>}
                                     <Table responsive>
                                         <tbody>
                                             <tr>
@@ -37,7 +61,11 @@ class CandidatePage extends Component {
                                             </tr>
                                             <tr>
                                                 <th scope="row">Balance</th>
-                                                <td>0 ETH</td>
+                                                <td>{candidateEthBalance}</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">Tokens</th>
+                                                <td>{candidateTokenBalance}</td>
                                             </tr>
                                         </tbody>
                                     </Table>
@@ -48,6 +76,7 @@ class CandidatePage extends Component {
                             <Card className="my-4">
                                 <CardHeader>New Claims</CardHeader>
                                 <CardBody>
+                                    {addClaimsHash && <Alert color="success">There is <a href={"https://ropsten.etherscan.io/tx/"+addClaimsHash} target="_blanck" className="alert-link">hash</a> of the transaction</Alert>}
                                     <AddClaimsForm />
                                 </CardBody>
                             </Card>
@@ -70,30 +99,16 @@ class CandidatePage extends Component {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <th scope="row">1</th>
-                                                <td>Teacher</td>
-                                                <td>VALIDATED</td>
-                                                <td>0x3443...</td>
-                                                <td>0x6556...</td>
-                                                <td>21/09/2018 22:00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">2</th>
-                                                <td>Dancer</td>
-                                                <td>NOT VALIDATED</td>
-                                                <td>0x3443...</td>
-                                                <td>0x0932...</td>
-                                                <td>22/09/2018 21:00</td>
-                                            </tr>
-                                            <tr>
-                                                <th scope="row">3</th>
-                                                <td>Singer</td>
-                                                <td>PENDING</td>
-                                                <td>0x3443...</td>
-                                                <td>0x4933...</td>
-                                                <td>23/09/2018 09:00</td>
-                                            </tr>
+                                            {claims.map((claim, index) =>
+                                                <tr key={index}>
+                                                    <th scope="row">{index +1}</th>
+                                                    <td>{claim.title}</td>
+                                                    <td>{claim.status === "1" ? "Pending" : claim.status === "2" ? "Validated" : claim.status === "3" ? "Not Validated" : null }</td>
+                                                    <td><a href={"https://ropsten.etherscan.io/address/"+claim.validator} target="_blank">{claim.validator.length > 7 ? claim.validator.slice(0, 7 - 1) + "…" : claim.validator}</a></td>
+                                                    <td><a href={"https://ropsten.etherscan.io/address/"+claim.certifier} target="_blank">{claim.certifier.length > 7 ? claim.certifier.slice(0, 7 - 1) + "…" : claim.certifier}</a></td>
+                                                    <td>{claim.date === "0" ? "N/N" : moment.unix(claim.date).format("YYYY-MM-DD HH:mm")}</td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </Table>
                                 </CardBody>
@@ -108,9 +123,14 @@ class CandidatePage extends Component {
 
 const mapStateToProps = (state) => {
     return {
+        candidateEthBalance: state.candidatePage.candidateEthBalance,
+        candidateTokenBalance: state.candidatePage.candidateTokenBalance,
+        addClaimsHash: state.candidatePage.addClaimsHash,
+        claims: state.candidatePage.claims,
+        candidateError: state.candidatePage.candidateError,
         address: state.wallet.address,
         seed: state.wallet.seed
     }
 }
 
-export default connect(mapStateToProps, null)(CandidatePage);
+export default connect(mapStateToProps, { setCandidateData })(CandidatePage);

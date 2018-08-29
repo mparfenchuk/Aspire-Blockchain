@@ -5,13 +5,15 @@ import walletReducer from './wallet'
 import mainPageReducer from './mainPage'
 import validatorPageReducer from './validatorPage'
 import employeerPageReducer from './employeerPage'
+import candidatePageReducer from './candidatePage'
 
 const reducer = combineReducers({
     form: formReducer,
     wallet: walletReducer,
-    mainPageType: mainPageReducer,
-    validatorPageType: validatorPageReducer,
-    employeerPageType: employeerPageReducer
+    mainPage: mainPageReducer,
+    validatorPage: validatorPageReducer,
+    employeerPage: employeerPageReducer,
+    candidatePage: candidatePageReducer
 })
 
 export default reducer

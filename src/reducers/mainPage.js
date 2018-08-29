@@ -14,6 +14,9 @@ const mainPageReducer = (state = initialState, action) => {
     case constants.CHANGE_TO_CREATE:{
         return initialState;
     }
+    case constants.LOGOUT:{
+        return initialState;
+    }
     default:
         return state;
     }
