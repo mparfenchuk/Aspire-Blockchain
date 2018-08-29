@@ -65,7 +65,7 @@ const employeerPageReducer = (state = initialState, action) => {
         case constants.SET_EMPLOYEER_CLAIM_HASH:{
             return {
                 ...state,
-                validateClaimHash: action.hash
+                employeerClaimHash: action.hash
             }
         }
         case constants.LOGOUT:{

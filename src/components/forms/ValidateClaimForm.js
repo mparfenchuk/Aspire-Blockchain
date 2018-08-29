@@ -42,8 +42,6 @@ class ValidateClaimForm extends Component {
 
     let { claim, index, candidate } = this.props;
 
-    console.log(values)
-
     let { validateClaim } = this.props;
     validateClaim(claim, candidate, values.certifier, values.status, "validateClaimForm-"+index);
   }

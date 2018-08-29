@@ -199,9 +199,10 @@ function* validateClaimFlow() {
                 chainId: web3.toHex('3')
             }
 
-            let claimTx = lightwallet.txutils.functionTx(VerificationContractAbi, 'validate', [candidate,certifier,claim,status], rawTx);
+            let isTrueSet = (status === 'true');
+            let claimTx = lightwallet.txutils.functionTx(VerificationContractAbi, 'validate', [candidate,certifier,claim,isTrueSet], rawTx);
             let signedTx = lightwallet.signing.signTx(ks, pwDerivedKey, claimTx, address);
-            
+
             let transactionHash = yield call(sendRawTransactionPromise, "0x" + signedTx);
 
             yield put(reset(formId))
@@ -210,7 +211,7 @@ function* validateClaimFlow() {
         } catch (error) {
             yield put(stopSubmit(formId, { _error: error.message }))  
         }
-    }
+    } 
 }
 
 function* addClaimsFlow() {
@@ -430,7 +431,7 @@ function* employeerClaimsFlow() {
                 for (let i = 0; i < validatedClaims.length; i++) {
                     claimsData.push({title:web3.toUtf8(validatedClaims[i]),status:"Invisible",certifier:"Invisible",validator:"Invisible",date:"Invisible"});
                 }
-            }
+            } 
 
             yield put({type: constants.SET_EMPLOYEER_CLAIMS, data: { "claims": claimsData, "isVerifier": isVerifier }})
         } catch (error) {
