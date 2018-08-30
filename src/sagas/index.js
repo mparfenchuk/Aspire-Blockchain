@@ -423,8 +423,8 @@ function* employeerClaimsFlow() {
 
             if (isVerifier) {
                 for (let i = 0; i < validatedClaims.length; i++) {
-                    let status = yield call(contractVerificationInstance.getClaimStatusForCandidate, validatedClaims[i], { from: address });
-                    let details = yield call(contractVerificationInstance.getClaimDetailsForCandidate, validatedClaims[i], { from: address });
+                    let status = yield call(contractVerificationInstance.getClaimStatusForVerifier, address, validatedClaims[i], "123", { from: "0xc5468a0576444026c734614cb59f5f173d5e8a6d" });
+                    let details = yield call(contractVerificationInstance.getClaimDetailsForVerifier, address, validatedClaims[i], "123", { from: "0xc5468a0576444026c734614cb59f5f173d5e8a6d" });
                     claimsData.push({title:web3.toUtf8(validatedClaims[i]),status:status[0].toString(),certifier:status[1],validator:details[0],date:details[1].toString()});
                 }
             } else {

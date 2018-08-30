@@ -58,7 +58,7 @@ class VerifyClaims extends Component {
 
         return (
             <Card className="my-4">
-                <CardHeader>Pending claims</CardHeader>
+                <CardHeader>Validated claims</CardHeader>
                 <CardBody>
                     <CardTitle><a href={"https://ropsten.etherscan.io/address/"+candidate} target="_blank">{candidate}</a></CardTitle>
                     {employeerClaimHash && <Alert color="success">There is <a href={"https://ropsten.etherscan.io/tx/"+employeerClaimHash} target="_blanck" className="alert-link">hash</a> of the transaction</Alert>}
